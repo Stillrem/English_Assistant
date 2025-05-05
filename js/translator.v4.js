@@ -1,11 +1,12 @@
 async function speak(field) {
-  const text = document.getElementById(field).value || document.getElementById(field).innerText;
+  const input = document.getElementById(field);
+  const text = input.value || input.innerText;
   const direction = document.querySelector('input[name=langdir]:checked').value;
   const lang = (field === 'input')
     ? (direction === 'en-ru' ? 'en' : 'ru')
     : (direction === 'en-ru' ? 'ru' : 'en');
 
-  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'EXAVITQu4vr4xnSDxMaL'; // Rachel (EN), Dmitry (RU)
+  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'EXAVITQu4vr4xnSDxMaL'; // Rachel / Dmitry
   const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
     headers: {
@@ -30,10 +31,12 @@ async function speak(field) {
 
 function translate() {
   const direction = document.querySelector('input[name=langdir]:checked').value;
-  const text = document.getElementById('input').value;
+  const text = document.getElementById('input').value.trim();
   const prompt = direction === 'en-ru'
     ? `Переведи это на разговорный русский: "${text}"`
     : `Translate this to natural, conversational English: "${text}"`;
+
+  document.getElementById('output').innerText = 'Переводим...';
 
   fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -48,6 +51,11 @@ function translate() {
   })
   .then(res => res.json())
   .then(data => {
-    document.getElementById('output').innerText = data.choices[0].message.content.trim();
+    const result = data.choices[0].message.content.trim();
+    document.getElementById('output').innerText = result;
+  })
+  .catch(error => {
+    document.getElementById('output').innerText = 'Ошибка перевода';
+    console.error(error);
   });
 }
