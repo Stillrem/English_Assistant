@@ -8,6 +8,16 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+<div id="micNotification" class="notification" style="display:none;position:fixed;top:0;width:100%;background:#ffdddd;color:#333;padding:15px;text-align:center;font-weight:bold;z-index:9999;border-bottom:2px solid red;">
+  Сайту требуется доступ к микрофону. Пожалуйста, разрешите его в настройках браузера.
+</div>
+<script>
+  function showMicNotification() {
+    document.getElementById('micNotification').style.display = 'block';
+  }
+</script>
+
   <div class="container">
     <h1>AI Translate with Microphone</h1>
     <div class="translate-box">
