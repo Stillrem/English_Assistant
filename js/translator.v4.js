@@ -5,7 +5,7 @@ async function speak(field) {
     ? (direction === 'en-ru' ? 'en' : 'ru')
     : (direction === 'en-ru' ? 'ru' : 'en');
 
-  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'TxGEqnHWrfWFTfGW9XjX';
+  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'EXAVITQu4vr4xnSDxMaL'; // Rachel (EN), Dmitry (RU)
   const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
     headers: {
@@ -16,7 +16,7 @@ async function speak(field) {
     body: JSON.stringify({
       text: text,
       model_id: 'eleven_monolingual_v1',
-      voice_settings: { stability: 0.4, similarity_boost: 0.7 }
+      voice_settings: { stability: 0.4, similarity_boost: 0.75 }
     })
   });
 
