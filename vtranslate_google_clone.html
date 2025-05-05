@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Translate with Microphone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>AI Translate with Microphone</h1>
+    <div class="translate-box">
+      <select id="fromLang">
+        <option value="auto">Auto Detect</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+      </select>
+      <button id="swapBtn">⇄</button>
+      <select id="toLang">
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+      </select>
+      <textarea id="inputText" placeholder="Enter text..."></textarea>
+      <div class="controls">
+        <button id="micBtn">🎤 Speak</button>
+        <button id="translateBtn">Translate</button>
+      </div>
+      <textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
+      <div class="controls">
+        <button id="speakOriginalBtn">Speak Original</button>
+        <button id="speakTranslatedBtn">Speak Translation</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
