@@ -5,7 +5,7 @@ async function speak(field) {
     ? (direction === 'en-ru' ? 'en' : 'ru')
     : (direction === 'en-ru' ? 'ru' : 'en');
 
-  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'TxGEqnHWrfWFTfGW9XjX';
+  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'TxGEqnHWrfWFTfGW9XjX'; // English / Russian
   const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
     headers: {
@@ -32,8 +32,8 @@ function translate() {
   const direction = document.querySelector('input[name=langdir]:checked').value;
   const text = document.getElementById('input').value;
   const prompt = direction === 'en-ru'
-    ? `Translate this to Russian: ${text}`
-    : `Translate this to English: ${text}`;
+    ? `Please translate this sentence to natural, everyday Russian: "${text}"`
+    : `Please translate this sentence to natural, everyday English: "${text}"`;
 
   fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -42,12 +42,12 @@ function translate() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{role: 'user', content: prompt}]
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
     })
   })
   .then(res => res.json())
   .then(data => {
-    document.getElementById('output').innerText = data.choices[0].message.content;
+    document.getElementById('output').innerText = data.choices[0].message.content.trim();
   });
 }
