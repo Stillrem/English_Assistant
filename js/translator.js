@@ -1,20 +1,35 @@
-let voices = [];
-window.speechSynthesis.onvoiceschanged = () => {
-  voices = window.speechSynthesis.getVoices();
-};
+async function speak(field) {
+  const text = document.getElementById(field).value || document.getElementById(field).innerText;
+  const direction = document.querySelector('input[name=langdir]:checked').value;
+  const lang = (field === 'input')
+    ? (direction === 'en-ru' ? 'en' : 'ru')
+    : (direction === 'en-ru' ? 'ru' : 'en');
 
-function getVoiceForLang(langCode) {
-  const preferred = langCode === 'en-US' ? ['Google US English', 'Samantha'] : ['Google русский', 'Milena'];
-  const match = voices.find(v => v.lang === langCode && preferred.includes(v.name));
-  return match || voices.find(v => v.lang === langCode) || null;
-}
+  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'TxGEqnHWrfWFTfGW9XjX';
+  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'audio/mpeg',
+      'xi-api-key': 'sk_b29c85460c5e3f1e52c3bd05105d621a6c69302638168152',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      text: text,
+      model_id: 'eleven_monolingual_v1',
+      voice_settings: { stability: 0.4, similarity_boost: 0.7 }
+    })
+  });
 
-function getDirection() {
-  return document.querySelector('input[name=langdir]:checked').value;
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const player = document.getElementById('player');
+  player.src = url;
+  player.style.display = 'block';
+  player.play();
 }
 
 function translate() {
-  const direction = getDirection();
+  const direction = document.querySelector('input[name=langdir]:checked').value;
   const text = document.getElementById('input').value;
   const prompt = direction === 'en-ru'
     ? `Translate this to Russian: ${text}`
@@ -35,20 +50,4 @@ function translate() {
   .then(data => {
     document.getElementById('output').innerText = data.choices[0].message.content;
   });
-}
-
-function speak(field) {
-  const text = document.getElementById(field).value || document.getElementById(field).innerText;
-  const direction = getDirection();
-  const lang = (field === 'input')
-    ? (direction === 'en-ru' ? 'en-US' : 'ru-RU')
-    : (direction === 'en-ru' ? 'ru-RU' : 'en-US');
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = lang;
-
-  const selectedVoice = getVoiceForLang(lang);
-  if (selectedVoice) utter.voice = selectedVoice;
-
-  speechSynthesis.speak(utter);
 }
