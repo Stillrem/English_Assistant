@@ -3,51 +3,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Voice Wave + Role Switch</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Google Translate Clone</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f8f9fa; }
-    .mic-button {
-      font-size: 18px;
-      padding: 10px 20px;
-      background: #4285f4;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    .notice {
-      display: none;
-      background: #ffe5e5;
-      color: #990000;
-      padding: 10px;
-      margin-top: 20px;
-      border: 1px solid #ffaaaa;
-      border-radius: 5px;
-    }
+    body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 20px; text-align: center; }
+    .mic-button { font-size: 18px; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; margin-top: 20px; }
+    .wave { width: 100%; height: 100px; background: #fff; margin-top: 20px; }
+    canvas { width: 100%; height: 100px; display: block; }
+    .role-switch { margin-top: 30px; }
   </style>
 </head>
 <body>
-  <h1>Google Translate Clone: Microphone Test</h1>
-  <button class="mic-button" onclick="requestMic()">🎤 Enable Microphone</button>
-  <div id="micNotice" class="notice">
-    Please enable microphone access in Safari Settings &gt; Safari &gt; Microphone &gt; Allow.<br>
-    Разрешите доступ к микрофону в Настройки &gt; Safari &gt; Микрофон &gt; Разрешить.
-  </div>
 
-  <script>
-    function requestMic() {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-          alert("Microphone access granted!");
-        })
-        .catch(error => {
-          if (error.name === "NotAllowedError" || error.name === "SecurityError") {
-            document.getElementById("micNotice").style.display = "block";
-          } else {
-            alert("Error accessing microphone: " + error.message);
-          }
-        });
+<h2>Voice Translator</h2>
+<div class="role-switch">
+  <label><input type="radio" name="role" value="technician" checked> Technician</label>
+  <label><input type="radio" name="role" value="client"> Client</label>
+</div>
+
+<button class="mic-button" onclick="startMic()">🎤 Start Speaking</button>
+
+<div class="wave">
+  <canvas id="waveCanvas"></canvas>
+</div>
+
+<script>
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+  let animationId;
+
+  function drawWave() {
+    let t = 0;
+    cancelAnimationFrame(animationId);
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      for (let x = 0; x < canvas.width; x++) {
+        const y = 50 + 20 * Math.sin((x + t) * 0.05);
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = '#4285f4';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      t += 2;
+      animationId = requestAnimationFrame(animate);
     }
-  </script>
+    animate();
+  }
+
+  function stopWave() {
+    cancelAnimationFrame(animationId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function startMic() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        drawWave();
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = "en-US";
+        recognition.onresult = (event) => {
+          stopWave();
+          const result = event.results[0][0].transcript;
+          alert("Recognized: " + result);
+        };
+        recognition.onerror = (event) => {
+          stopWave();
+          alert("Error: " + event.error);
+        };
+        recognition.start();
+      })
+      .catch(error => {
+        stopWave();
+        alert("Microphone access denied. Please enable it in browser settings.");
+      });
+  }
+</script>
+
 </body>
 </html>
