@@ -3,7 +3,7 @@ function translate() {
   fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer YOUR_OPENAI_API_KEY',
+      'Authorization': 'Bearer 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',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
