@@ -5,7 +5,7 @@ async function speak(field) {
     ? (direction === 'en-ru' ? 'en' : 'ru')
     : (direction === 'en-ru' ? 'ru' : 'en');
 
-  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'TxGEqnHWrfWFTfGW9XjX'; // English / Russian
+  const voiceId = lang === 'en' ? '21m00Tcm4TlvDq8ikWAM' : 'TxGEqnHWrfWFTfGW9XjX';
   const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
     headers: {
@@ -32,8 +32,8 @@ function translate() {
   const direction = document.querySelector('input[name=langdir]:checked').value;
   const text = document.getElementById('input').value;
   const prompt = direction === 'en-ru'
-    ? `Please translate this sentence to natural, everyday Russian: "${text}"`
-    : `Please translate this sentence to natural, everyday English: "${text}"`;
+    ? `Переведи это на разговорный русский: "${text}"`
+    : `Translate this to natural, conversational English: "${text}"`;
 
   fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
