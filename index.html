@@ -29,28 +29,17 @@
             padding: 12px 14px;
             margin-bottom: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-        }
-        .field-container span.icon {
-            font-size: 20px;
-            margin-right: 12px;
-            color: #34C759;
-            flex-shrink: 0;
         }
         .field-container label {
             font-weight: 500;
             font-size: 14px;
             color: #BBBBBB;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             display: block;
-        }
-        .field-input {
-            flex-grow: 1;
         }
         input {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px 14px;
             font-size: 16px;
             background-color: #2A2A2A;
             border: 1px solid #444;
@@ -86,43 +75,28 @@
     <h2>Appliance Repair Calculator</h2>
     
     <div class="field-container">
-        <span class="icon">💵</span>
-        <div class="field-input">
-            <label for="orderAmount">Стоимость заказа ($):</label>
-            <input type="number" id="orderAmount" value="75" placeholder="Сколько платит компания за заказ" />
-        </div>
+        <label for="orderAmount">Стоимость заказа ($):</label>
+        <input type="number" id="orderAmount" value="75" placeholder="💵 Введите сумму заказа" />
     </div>
 
     <div class="field-container">
-        <span class="icon">📏</span>
-        <div class="field-input">
-            <label for="distance">Расстояние в одну сторону (мили):</label>
-            <input type="number" id="distance" value="20" placeholder="Сколько миль до клиента" />
-        </div>
+        <label for="distance">Расстояние в одну сторону (мили):</label>
+        <input type="number" id="distance" value="20" placeholder="📏 Введите расстояние в милях" />
     </div>
 
     <div class="field-container">
-        <span class="icon">🕒</span>
-        <div class="field-input">
-            <label for="driveTime">Время в пути (минуты в одну сторону):</label>
-            <input type="number" id="driveTime" value="30" placeholder="Минуты в пути в одну сторону" />
-        </div>
+        <label for="driveTime">Время в пути (минуты в одну сторону):</label>
+        <input type="number" id="driveTime" value="30" placeholder="🕒 Введите время в минутах" />
     </div>
 
     <div class="field-container">
-        <span class="icon">⛽</span>
-        <div class="field-input">
-            <label for="gasCostPerMile">Стоимость бензина за милю ($):</label>
-            <input type="number" id="gasCostPerMile" value="0.20" placeholder="Ваш расход топлива за милю" />
-        </div>
+        <label for="gasCostPerMile">Стоимость бензина за милю ($):</label>
+        <input type="number" id="gasCostPerMile" value="0.20" placeholder="⛽ Введите стоимость топлива" />
     </div>
 
     <div class="field-container">
-        <span class="icon">🎯</span>
-        <div class="field-input">
-            <label for="minHourlyRate">Минимальный желаемый доход в час ($):</label>
-            <input type="number" id="minHourlyRate" value="30" placeholder="Минимальный доход в час" />
-        </div>
+        <label for="minHourlyRate">Минимальный желаемый доход в час ($):</label>
+        <input type="number" id="minHourlyRate" value="30" placeholder="🎯 Введите минимальный доход в час" />
     </div>
 
     <button onclick="calculate()">Рассчитать</button>
