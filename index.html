@@ -1,1 +1,56 @@
-<!DOCTYPE html><html><head><title>AI Translate</title></head><body><h1>Updated AI Translate with Microphone</h1></body></html>
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Калькулятор заявки</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.png" />
+  <meta name="theme-color" content="#0b0">
+  <style>
+    body { font-family:sans-serif; padding:20px; max-width:500px; margin:auto; background:#f4f4f4; }
+    input, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
+    button { background:#0b0; color:white; border:none; cursor:pointer; }
+    #result { background:white; padding:10px; border:1px solid #ccc; margin-top:15px; }
+  </style>
+</head>
+<body>
+  <h2>📍 Калькулятор заявки</h2>
+  <input type="number" id="orderAmount" value="75" placeholder="Стоимость заказа ($)">
+  <input type="number" id="distance" value="20" placeholder="Расстояние в одну сторону (мили)">
+  <input type="number" id="driveTime" value="30" placeholder="Время в пути (мин)">
+  <input type="number" id="gasCostPerMile" value="0.20" placeholder="Цена бензина за милю ($)">
+  <input type="number" id="minHourlyRate" value="30" placeholder="Мин. доход в час ($)">
+  <button onclick="calculate()">Рассчитать</button>
+  <div id="result"></div>
+  <script>
+    function calculate() {
+      const orderAmount = parseFloat(document.getElementById('orderAmount').value);
+      const distance = parseFloat(document.getElementById('distance').value);
+      const driveTime = parseFloat(document.getElementById('driveTime').value);
+      const gasCostPerMile = parseFloat(document.getElementById('gasCostPerMile').value);
+      const minHourlyRate = parseFloat(document.getElementById('minHourlyRate').value);
+
+      const totalDistance = distance * 2;
+      const totalDriveTime = driveTime * 2;
+
+      const gasCost = totalDistance * gasCostPerMile;
+      const timeCostHours = totalDriveTime / 60;
+      const netProfit = orderAmount - gasCost;
+      const effectiveHourlyRate = netProfit / timeCostHours;
+
+      let verdict = effectiveHourlyRate >= minHourlyRate
+        ? "✅ Выгодно ехать"
+        : "❌ Не выгодно ехать";
+
+      document.getElementById('result').innerHTML = `
+        🚗 Расход на бензин: $${gasCost.toFixed(2)} <br>
+        💵 Чистая прибыль: $${netProfit.toFixed(2)} <br>
+        ⏳ Доход в час: $${effectiveHourlyRate.toFixed(2)} <br>
+        <b>${verdict}</b>
+      `;
+    }
+  </script>
+</body>
+</html>
