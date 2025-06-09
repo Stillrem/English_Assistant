@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appliance Repair Calculator</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#000000"/>
+    <link rel="apple-touch-icon" href="icon.png"/>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            padding: 16px;
+            max-width: 480px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+            color: #FFFFFF;
+        }
+        .field-container {
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+        }
+        .field-container span.icon {
+            font-size: 20px;
+            margin-right: 12px;
+            color: #34C759;
+            flex-shrink: 0;
+        }
+        .field-container label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #BBBBBB;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .field-input {
+            flex-grow: 1;
+        }
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            background-color: #2A2A2A;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+        button {
+            padding: 14px;
+            font-size: 16px;
+            width: 100%;
+            background-color: #34C759;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        button:hover {
+            background-color: #28A745;
+        }
+        #result {
+            padding: 14px;
+            background: #1E1E1E;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 15px;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Appliance Repair Calculator</h2>
+    
+    <div class="field-container">
+        <span class="icon">💵</span>
+        <div class="field-input">
+            <label for="orderAmount">Стоимость заказа ($):</label>
+            <input type="number" id="orderAmount" value="75" placeholder="Сколько платит компания за заказ" />
+        </div>
+    </div>
+
+    <div class="field-container">
+        <span class="icon">📏</span>
+        <div class="field-input">
+            <label for="distance">Расстояние в одну сторону (мили):</label>
+            <input type="number" id="distance" value="20" placeholder="Сколько миль до клиента" />
+        </div>
+    </div>
+
+    <div class="field-container">
+        <span class="icon">🕒</span>
+        <div class="field-input">
+            <label for="driveTime">Время в пути (минуты в одну сторону):</label>
+            <input type="number" id="driveTime" value="30" placeholder="Минуты в пути в одну сторону" />
+        </div>
+    </div>
+
+    <div class="field-container">
+        <span class="icon">⛽</span>
+        <div class="field-input">
+            <label for="gasCostPerMile">Стоимость бензина за милю ($):</label>
+            <input type="number" id="gasCostPerMile" value="0.20" placeholder="Ваш расход топлива за милю" />
+        </div>
+    </div>
+
+    <div class="field-container">
+        <span class="icon">🎯</span>
+        <div class="field-input">
+            <label for="minHourlyRate">Минимальный желаемый доход в час ($):</label>
+            <input type="number" id="minHourlyRate" value="30" placeholder="Минимальный доход в час" />
+        </div>
+    </div>
+
+    <button onclick="calculate()">Рассчитать</button>
+
+    <div id="result"></div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+
+        function calculate() {
+            const orderAmount = parseFloat(document.getElementById('orderAmount').value);
+            const distance = parseFloat(document.getElementById('distance').value);
+            const driveTime = parseFloat(document.getElementById('driveTime').value);
+            const gasCostPerMile = parseFloat(document.getElementById('gasCostPerMile').value);
+            const minHourlyRate = parseFloat(document.getElementById('minHourlyRate').value);
+
+            const totalDistance = distance * 2;
+            const totalDriveTime = driveTime * 2;
+
+            const gasCost = totalDistance * gasCostPerMile;
+            const timeCostHours = totalDriveTime / 60;
+
+            const netProfit = orderAmount - gasCost;
+            const effectiveHourlyRate = netProfit / timeCostHours;
+
+            let verdict = "";
+            if (effectiveHourlyRate >= minHourlyRate) {
+                verdict = "✅ Выгодно ехать";
+            } else {
+                verdict = "❌ Не выгодно ехать";
+            }
+
+            document.getElementById('result').innerHTML = `
+                <strong>🚗 Расход на бензин:</strong> $${gasCost.toFixed(2)} <br>
+                <strong>💵 Чистая прибыль:</strong> $${netProfit.toFixed(2)} <br>
+                <strong>⏳ Заработок в час:</strong> $${effectiveHourlyRate.toFixed(2)} <br>
+                <strong>${verdict}</strong>
+            `;
+        }
+    </script>
+</body>
+</html>
