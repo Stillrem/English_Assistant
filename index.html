@@ -32,8 +32,8 @@
         }
         .field-container label {
             font-weight: 500;
-            font-size: 14px;
-            color: #BBBBBB;
+            font-size: 15px;
+            color: #FFFFFF;
             margin-bottom: 6px;
             display: block;
         }
@@ -75,28 +75,28 @@
     <h2>Appliance Repair Calculator</h2>
     
     <div class="field-container">
-        <label for="orderAmount">Стоимость заказа ($):</label>
-        <input type="number" id="orderAmount" value="75" placeholder="💵 Введите сумму заказа" />
+        <label for="orderAmount">💵 Стоимость заказа ($):</label>
+        <input type="number" id="orderAmount" placeholder="Введите сумму заказа" />
     </div>
 
     <div class="field-container">
-        <label for="distance">Расстояние в одну сторону (мили):</label>
-        <input type="number" id="distance" value="20" placeholder="📏 Введите расстояние в милях" />
+        <label for="distance">📏 Расстояние в одну сторону (мили):</label>
+        <input type="number" id="distance" placeholder="Введите расстояние в милях" />
     </div>
 
     <div class="field-container">
-        <label for="driveTime">Время в пути (минуты в одну сторону):</label>
-        <input type="number" id="driveTime" value="30" placeholder="🕒 Введите время в минутах" />
+        <label for="driveTime">🕒 Время в пути (минуты в одну сторону):</label>
+        <input type="number" id="driveTime" placeholder="Введите время в минутах" />
     </div>
 
     <div class="field-container">
-        <label for="gasCostPerMile">Стоимость бензина за милю ($):</label>
-        <input type="number" id="gasCostPerMile" value="0.20" placeholder="⛽ Введите стоимость топлива" />
+        <label for="gasCostPerMile">⛽ Стоимость бензина за милю ($):</label>
+        <input type="number" id="gasCostPerMile" placeholder="Введите стоимость топлива" />
     </div>
 
     <div class="field-container">
-        <label for="minHourlyRate">Минимальный желаемый доход в час ($):</label>
-        <input type="number" id="minHourlyRate" value="30" placeholder="🎯 Введите минимальный доход в час" />
+        <label for="minHourlyRate">🎯 Минимальный желаемый доход в час ($):</label>
+        <input type="number" id="minHourlyRate" placeholder="Введите минимальный доход в час" />
     </div>
 
     <button onclick="calculate()">Рассчитать</button>
@@ -108,12 +108,30 @@
             navigator.serviceWorker.register('service-worker.js');
         }
 
+        // Load saved values
+        window.onload = function() {
+            const fields = ['orderAmount', 'distance', 'driveTime', 'gasCostPerMile', 'minHourlyRate'];
+            fields.forEach(field => {
+                const savedValue = localStorage.getItem(field);
+                if (savedValue !== null) {
+                    document.getElementById(field).value = savedValue;
+                }
+            });
+        };
+
         function calculate() {
             const orderAmount = parseFloat(document.getElementById('orderAmount').value);
             const distance = parseFloat(document.getElementById('distance').value);
             const driveTime = parseFloat(document.getElementById('driveTime').value);
             const gasCostPerMile = parseFloat(document.getElementById('gasCostPerMile').value);
             const minHourlyRate = parseFloat(document.getElementById('minHourlyRate').value);
+
+            // Save values
+            localStorage.setItem('orderAmount', orderAmount);
+            localStorage.setItem('distance', distance);
+            localStorage.setItem('driveTime', driveTime);
+            localStorage.setItem('gasCostPerMile', gasCostPerMile);
+            localStorage.setItem('minHourlyRate', minHourlyRate);
 
             const totalDistance = distance * 2;
             const totalDriveTime = driveTime * 2;
