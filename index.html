@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appliance Repair Calculator</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#000000"/>
+    <link rel="apple-touch-icon" href="icon.png"/>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            padding: 16px;
+            max-width: 480px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+            color: #FFFFFF;
+        }
+        .field-container {
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .field-container label {
+            font-weight: 500;
+            font-size: 15px;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+            display: block;
+            padding-left: 2px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            background-color: #2A2A2A;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+        button {
+            padding: 14px;
+            font-size: 16px;
+            width: 100%;
+            background-color: #34C759;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            margin-top: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        button:hover {
+            background-color: #28A745;
+        }
+        #result {
+            padding: 14px;
+            background: #1E1E1E;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 15px;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Appliance Repair Calculator</h2>
+    
+    <div class="field-container">
+        <label for="orderAmount">💵 Стоимость заказа ($):</label>
+        <input type="number" id="orderAmount" placeholder="Введите сумму заказа" />
+    </div>
+
+    <div class="field-container">
+        <label for="distance">📏 Расстояние в одну сторону (мили):</label>
+        <input type="number" id="distance" placeholder="Введите расстояние в милях" />
+    </div>
+
+    <div class="field-container">
+        <label for="driveTime">🕒 Время в пути (минуты в одну сторону):</label>
+        <input type="number" id="driveTime" placeholder="Введите время в минутах" />
+    </div>
+
+    <div class="field-container">
+        <label for="gasCostPerMile">⛽ Стоимость бензина за милю ($):</label>
+        <input type="number" id="gasCostPerMile" placeholder="Введите стоимость топлива" />
+    </div>
+
+    <div class="field-container">
+        <label for="minHourlyRate">🎯 Минимальный желаемый доход в час ($):</label>
+        <input type="number" id="minHourlyRate" placeholder="Введите минимальный доход в час" />
+    </div>
+
+    <button onclick="calculate()">Рассчитать</button>
+
+    <div id="result"></div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+
+        // Load saved values
+        window.onload = function() {
+            const fields = ['orderAmount', 'distance', 'driveTime', 'gasCostPerMile', 'minHourlyRate'];
+            fields.forEach(field => {
+                const savedValue = localStorage.getItem(field);
+                if (savedValue !== null) {
+                    document.getElementById(field).value = savedValue;
+                }
+            });
+        };
+
+        function calculate() {
+            const orderAmount = parseFloat(document.getElementById('orderAmount').value);
+            const distance = parseFloat(document.getElementById('distance').value);
+            const driveTime = parseFloat(document.getElementById('driveTime').value);
+            const gasCostPerMile = parseFloat(document.getElementById('gasCostPerMile').value);
+            const minHourlyRate = parseFloat(document.getElementById('minHourlyRate').value);
+
+            // Save values
+            localStorage.setItem('orderAmount', orderAmount);
+            localStorage.setItem('distance', distance);
+            localStorage.setItem('driveTime', driveTime);
+            localStorage.setItem('gasCostPerMile', gasCostPerMile);
+            localStorage.setItem('minHourlyRate', minHourlyRate);
+
+            const totalDistance = distance * 2;
+            const totalDriveTime = driveTime * 2;
+
+            const gasCost = totalDistance * gasCostPerMile;
+            const timeCostHours = totalDriveTime / 60;
+
+            const netProfit = orderAmount - gasCost;
+            const effectiveHourlyRate = netProfit / timeCostHours;
+
+            let verdict = "";
+            if (effectiveHourlyRate >= minHourlyRate) {
+                verdict = "✅ Выгодно ехать";
+            } else {
+                verdict = "❌ Не выгодно ехать";
+            }
+
+            document.getElementById('result').innerHTML = `
+                <strong>🚗 Расход на бензин:</strong> $${gasCost.toFixed(2)} <br>
+                <strong>💵 Чистая прибыль:</strong> $${netProfit.toFixed(2)} <br>
+                <strong>⏳ Заработок в час:</strong> $${effectiveHourlyRate.toFixed(2)} <br>
+                <strong>${verdict}</strong>
+            `;
+        }
+    </script>
+</body>
+</html>
